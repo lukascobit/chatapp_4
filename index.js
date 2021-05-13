@@ -11,15 +11,21 @@ app.get('/', (req, res) => {
 
 
 server.listen(3000, () => {
-  console.log('listening on *:3000');
+  console.log('listening on port 3000');
 });
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    io.emit('chat message', "new user joined");
+    io.emit('new user');
+
     socket.on('disconnect', () => {
-      console.log('user disconnected');
+      io.emit('chat message', "user disconnected");
     });
+
     socket.on('chat message', (msg) => {
         io.emit('chat message', msg);
     });
+    socket.on("change",(msg)=>{
+        io.emit("change",msg)
+    })
   });
