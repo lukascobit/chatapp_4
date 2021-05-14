@@ -26,6 +26,9 @@ io.on('connection', (socket) => {
         io.emit('chat message', msg);
     });
     socket.on("change",(msg)=>{
-        io.emit("change",msg)
-    })
+        io.emit("change",msg);
+    });
+    socket.on("change name",(UserName)=>{
+      io.emit("change name",UserName);
+    });
   });

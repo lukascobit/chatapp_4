@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>chat</title>
     <style>
-      body { background-color: #677280;margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      body { background-color: #677280;margin: 0; padding-bottom: 3rem; font-family:"Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
       #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
       #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
@@ -14,19 +14,21 @@
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #9cb9eb; border-radius: 1vw;}
       #messages > li:nth-child(even) { background: #bdd2e9; border-radius: 1vw;}
-      #namesList {background-color: rgb(200, 248, 232);position:absolute; margin: 0 0 0% 93%; padding: 1vw; border-radius: 2vw 0vw 0vw 2vw;}
+      #namesList {background-color: rgb(200, 248, 232);position:absolute; margin: 0 0 0 85%; padding: 1vw; border-radius: 0vw 0vw 0vw 2vw; width: 13vw;}
+      #namee {background-color: azure; border-radius: 10%; font-size: 1vw;}
 
     </style>
   </head>
   <body>
     <div id="namesList">
       <h1>Users online: <b id="counter">0</b></h1>
+      <h1 id="names"></h1>
     </div>  
 
     <ul id="messages"></ul>
     <form id="form" action="">
       <input onchange="Change()" id="input" autocomplete="off" ></input>
-      <input id="namee" autocomplete="off" placeholder="name..."></input>
+      <input onchange="ChangedName()" id="namee" autocomplete="off" placeholder="name..."></input>
       <button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
@@ -38,7 +40,7 @@
         var input = document.getElementById('input');
         var namee = document.getElementById('namee');
         var counter = document.getElementById('counter');
-       
+      
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -51,6 +53,22 @@
         socket.on('new user', function() {
           console.log(parseInt(counter.innerHTML));
           counter.innerHTML = parseInt(counter.innerHTML) + 1
+        });
+        socket.on('change name', function(userName) {
+          var AllNames = document.getElementById('names');
+          if(AllNames.innerHTML.includes(userName)){
+            var item = document.createElement('li');
+            item.textContent = `somebody tried to use already used username, is this is you please try instead something like ${userName}_${Math.round(Math.random()*1000)}`;
+            messages.appendChild(item);
+            item.style.backgroundColor = "f6b3cf3";
+            item.style.color = "#232316";
+            item.style.fontFamily = "Trebuchet MS";
+            item.style.padding = "3px";
+            return;
+          }
+          AllNames.innerHTML += ` ${userName},`
+          
+          
         });
 
         socket.on('chat message', function(msg) {
@@ -80,6 +98,10 @@
             UserName = "someone"
           }
           socket.emit('chat message', `${UserName} is typing...`);
+        }
+        function ChangedName(){
+          var UserName = namee.value
+          socket.emit('change name',UserName);
         }
     </script>
   </body>
