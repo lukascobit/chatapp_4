@@ -16,6 +16,7 @@
       #messages > li:nth-child(even) { background: #bdd2e9; border-radius: 1vw;}
       #namesList {background-color: rgb(200, 248, 232);position:absolute; margin: 0 0 0 85%; padding: 1vw; border-radius: 0vw 0vw 0vw 2vw; width: 13vw;}
       #namee {background-color: azure; border-radius: 10%; font-size: 1vw;}
+      #names { color: #3c3d41; border-radius: 1vw;background-color: #94c0f0;padding: 1vw;}
 
     </style>
   </head>
@@ -65,8 +66,26 @@
             item.style.fontFamily = "Trebuchet MS";
             item.style.padding = "3px";
             return;
-          }
+          }else if(userName.length > 9){
+            var item = document.createElement('li');
+            item.textContent = `thats too long username, please try something like ${userName.substr(0,8)} instead`;
+            messages.appendChild(item);
+            item.style.backgroundColor = "f6b3cf3";
+            item.style.color = "#232316";
+            item.style.fontFamily = "Trebuchet MS";
+            item.style.padding = "3px";
+            return;
+          }else if(userName.length < 2){
+            var item = document.createElement('li');
+            item.textContent = `thats a really short username try something like ${userName}_${Math.round(Math.random()*1000)} instead`;
+            messages.appendChild(item);
+            item.style.backgroundColor = "f6b3cf3";
+            item.style.color = "#232316";
+            item.style.fontFamily = "Trebuchet MS";
+            item.style.padding = "3px";
+            return;
           AllNames.innerHTML += ` ${userName},`
+          }
           
           
         });
